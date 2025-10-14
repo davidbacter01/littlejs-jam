@@ -1,4 +1,4 @@
-import { engineInit, EngineObject, setCanvasFixedSize, tile, vec2, textureInfos, TileInfo, Color } from 'littlejsengine';
+import { engineInit, EngineObject, setCanvasFixedSize, tile, vec2, textureInfos, UISystemPlugin, uiSystem } from 'littlejsengine';
 import { Player } from './objects/player';
 import { Game } from './objects/game';
 import { DiceRollScene } from './scenes/dice_roll';
@@ -11,8 +11,8 @@ let game: Game | null = null;
 setCanvasFixedSize(vec2(1200, 800));
 
 function gameInit() {
-  // Your game initialization code here
   console.log('Game Initialized');
+  new UISystemPlugin;
   // const player = new Player();
 
   console.log(textureInfos);
@@ -23,6 +23,7 @@ function gameInit() {
 
   const diceScene = new DiceRollScene();
   diceScene.roll();
+  // diceScene.destroy();
 
   // game = new Game({
   //   update: () => {
