@@ -2,9 +2,10 @@ import { engineInit, EngineObject, setCanvasFixedSize, tile, vec2, textureInfos,
 import { Player } from './objects/player';
 import { Game } from './objects/game';
 import { DiceRollScene } from './scenes/dice_roll';
+import { rollD20 } from './utils/utils';
 // import { DiceRollScene } from './scenes/dice_roll';
 
-const ASSETS = ['assets/d20_sheet.png'];
+const ASSETS = ['assets/d20_sheet.png', 'assets/player_4.png'];
 
 let game: Game | null = null;
 
@@ -17,9 +18,9 @@ function gameInit() {
 
   console.log(textureInfos);
 
-  const diceScene = new DiceRollScene();
-  diceScene.roll();
-  // diceScene.destroy();
+  // let result = rollD20(3);
+  // console.log('Rolled D20s:', result);
+  const player = new Player(vec2(0, 0));
 
   // game = new Game({
   //   update: () => {

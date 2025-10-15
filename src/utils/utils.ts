@@ -1,3 +1,5 @@
+import { DiceRollScene } from "../scenes/dice_roll";
+
 /**
  * Checks whether all elements in an iterable satisfy a given predicate function.
  *
@@ -29,4 +31,9 @@ export function all<T>(iterable: Iterable<T>, callback: (item: T) => boolean): b
         }
     }
     return true;
+}
+
+export function rollD20(d20Count: number = 1): number[] {
+    const diceScene = new DiceRollScene(d20Count);
+    return diceScene.roll();
 }
