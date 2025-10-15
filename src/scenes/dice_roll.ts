@@ -6,11 +6,10 @@ import {
     Vector2,
     TileInfo,
     randInt,
-    UIText,
-    Color,
-    UIObject,
-    mainCanvasSize
+    mainCanvasSize,
 } from 'littlejsengine';
+
+import { UIObjectWithId, UITextWithId } from '../engine_extensions/ui_system';
 
 const FRAME_SIZE = vec2(96, 96);
 const DICE_TEXTURE_SHEET = 0; // Assumes the dice sprite sheet is the first texture loaded
@@ -25,6 +24,7 @@ export class Dice extends EngineObject {
 
     constructor(position: Vector2, size: Vector2) {
         super(position, size, tile(0, FRAME_SIZE, DICE_TEXTURE_SHEET));
+        this.renderOrder = 9999999999; // Render on top of everything
     }
 
     rollDice() {
@@ -74,7 +74,7 @@ export class Dice extends EngineObject {
 export class DiceRollScene extends EngineObject {
     private _resultDisplayTime: number = 2; // seconds
     private _startDisplayTime: number = 0;
-    private _resultText: UIObject | null = null;
+    private _resultText: UIObjectWithId | null = null;
 
     constructor(diceCount: number = 3, resultDisplayTime: number = 2) {
         super();
@@ -103,20 +103,7 @@ export class DiceRollScene extends EngineObject {
     update(): void {
         if (!this.isRolling && this._startDisplayTime === 0) {
             this._startDisplayTime = time;
-            // start display result
-            let text = 'Result: ';
-            let total = 0;
-            for (const die of this.children) {
-                text += die.result + '+';
-                total += die.result;
-            }
-            text = text.slice(0, -1); // Remove trailing '+'
-            text += `=${total}`;
-            console.log(text);
-            const pos = vec2(mainCanvasSize.x / 2 - 10, mainCanvasSize.y / 2 - 100);
-            this._resultText = new UIObject(pos, vec2(500, 80));
-            this._resultText.children.push(new UIText(pos, vec2(500, 80), text));
-            this._resultText.color = new Color(1, 0, 0, 1);
+            this._displayResultText();
         } else if (!this.isRolling && time - this._startDisplayTime > this._resultDisplayTime) {
             this.destroy();
         }
@@ -124,5 +111,31 @@ export class DiceRollScene extends EngineObject {
 
     render(): void {
         return;
+    }
+
+    destroy(): void {
+        super.destroy();
+        this._resultText?.destroy();
+    }
+
+    private _displayResultText(): void {
+        let text = 'Result: ';
+        let total = 0;
+
+        for (const die of this.children) {
+            text += die.result + ' + ';
+            total += die.result;
+        }
+
+        text = text.slice(0, -2); // Remove trailing '+'
+        text += `= ${total}`
+
+        const pos = vec2(mainCanvasSize.x / 2 - 10, mainCanvasSize.y / 2 - 100);
+        this._resultText = new UIObjectWithId(
+            pos, vec2(500, 80)
+        );
+        const uiText = new UITextWithId(pos, vec2(500, 80), text);
+        this._resultText.children.push(uiText);
+        this._resultText.visible = true;
     }
 }

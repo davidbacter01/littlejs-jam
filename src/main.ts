@@ -12,14 +12,10 @@ setCanvasFixedSize(vec2(1200, 800));
 
 function gameInit() {
   console.log('Game Initialized');
-  new UISystemPlugin;
+  new UISystemPlugin();
   // const player = new Player();
 
   console.log(textureInfos);
-
-  // const ob = new EngineObject(vec2(0), vec2(3), tile(0, 96, 0));
-  // ob.color = new Color(1, 0, 0);
-  // ob.renderOrder = 1;
 
   const diceScene = new DiceRollScene();
   diceScene.roll();
